@@ -23,7 +23,7 @@ and add the resulting directory to LD_LIBRARY_PATH
 ## Install other python RDB client
 
 Install your python RDB client of choice.
-MariaDB and PosgresSQL are good options..
+[MySQL](https://pypi.org/project/MySQL-python/) and [PosgreSQL](https://wiki.postgresql.org/wiki/Python) are good options...
 
 ## Setting up the program
 
