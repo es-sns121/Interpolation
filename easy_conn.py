@@ -9,31 +9,40 @@ import ChannelHelper as ch
 #   Main routine   #
 # ---------------- #
 
+# Provides a central location for all non externalized strings.
+class Keys:
+    config_file  = 'connection.conf'
+    beam_power   = 'beam_power_channel_name'
+    flow_rate    = 'flow_rate_channel_name'
+    temp_in      = 'temp_in_channel_name'
+    temp_out     = 'temp_out_channel_name'
+    pressure_in  = 'pressure_out_channel_name'
+    pressure_out = 'pressure_out_channel_name'
+    
 # Read configuration file
 confs = {}
-with open("connection.conf") as config_file:
+with open(Keys.config_file) as config_file:
     for line in config_file:
         line = line.strip()
-        if not line or line.startswith("#"):
+        if not line or line.startswith('#'):
             continue
         key, value = line.split('=')
         confs[key] = value
 
 beam_power_channel = None
-if 'beam_power_channel_name' in confs and confs['beam_power_channel_name'].strip():
-    print 'beam power supplied', '"' + confs['beam_power_channel_name'] + '"'
-    beam_power_channel = confs['beam_power_channel_name']
+if Keys.beam_power in confs and confs[Keys.beam_power].strip():
+    beam_power_channel = confs[Keys.beam_power]
     
 # Channel ID that the mass flow rate values will be pulled from.
-flow_rate_channel = confs['flow_rate_channel_name']
+flow_rate_channel = confs[Keys.flow_rate]
 
 # Channel IDs that the in and out temperature values will be pulled from.
-temp_in_channel  = confs['temp_in_channel_name']
-temp_out_channel = confs['temp_out_channel_name']
+temp_in_channel  = confs[Keys.temp_in]
+temp_out_channel = confs[Keys.temp_out]
 
 # Channel IDs that the in and out pressure values will be pulled from.
-pressure_in_channel  = confs['pressure_in_channel_name']
-pressure_out_channel = confs['pressure_out_channel_name']
+pressure_in_channel  = confs[Keys.pressure_in]
+pressure_out_channel = confs[Keys.pressure_out]
 
 # Connect to RDB
 rdbHelper = RdbHelper()
