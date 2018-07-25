@@ -7,6 +7,7 @@ over channel overlaps.
 
 ## Install Oracle python client.
 
+### Linux
 Install Oracle client by any of these, depending on python version:
     
     easy_install cx_Oracle
@@ -19,7 +20,35 @@ Download the Oracle instant client binary from
 
 On Linux, unpack the instantclient-basiclite-linux.x64-12.2.0.1.0.zip
 and add the resulting directory to LD_LIBRARY_PATH
+
+### Windows
+
+#### You have python but not pip.
+
+Download pip, the python package manager.
+
+    https://bootstrap.pypa.io/get-pip.py
+
+#### You don't have python.
+
+Download python.
+
+    https://www.python.org/downloads/release/python-2715/
+
+Now download pip.
+
+#### With python and pip.
+Install the Oracle client with pip.
     
+    pip install cx_Oracle
+
+
+Download the Oracle client binary from 
+
+    http://www.oracle.com/technetwork/database/database-technologies/instant-client/downloads/index.html
+
+On windows, upack the instantclient-basic-windows.x64-12.2.0.1.0.zip in the directory where you will be running your python code from.
+
 ## Install other python RDB client
 
 Install your python RDB client of choice.
@@ -39,6 +68,7 @@ The program only needs a single file to read input from...
     # channel_id=RTBT_Diag:BCM25I:Power60
 
     # All fields except 'beam_power_channel_name' are required.
+    
     # Beam power.
     beam_power_channel_name=
     
