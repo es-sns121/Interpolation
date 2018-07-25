@@ -53,7 +53,6 @@ On windows, upack the instantclient-basic-windows.x64-12.2.0.1.0.zip in the dire
 
 Install your python RDB client of choice.
 
-
 [MySQL](https://pypi.org/project/MySQL-python/) and [PostgreSQL](https://wiki.postgresql.org/wiki/Python) are good options...
 
 ## Setting up the program
@@ -92,5 +91,15 @@ The fields should have the respective PV names (channels) that data is to be pul
 ### Running the script
     
     python easy_conn.py
+    
+#### Regarding the ChannelHelper.plot method
+
+This method is mostly for debug purposes, as it allows you to compare the interpolated values to the raw data, but it also stands as a good example of
+how to plot data using matplotlib.
+
+    ChannelHelper.plot(raw_times, raw_values, times, values, title)
+
+Its primary purpose is to plot two traces of data. The first two arguments are NumPy arrays of time and values for the raw data. The third and fourth
+argument is the time and values for the aligned interpolated values. The fifth argument lets you specificy the title of the opened plot window.
 
 
