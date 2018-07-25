@@ -33,22 +33,29 @@ The program only needs a single file to read input from...
 
 ### connection.conf
 
-'connection.conf' is a connection configuration file. The file contains five fields:
+'connection.conf' is a connection configuration file. The file contains six fields:
+    
+    # Example channel
+    # channel_id=RTBT_Diag:BCM25I:Power60
+
+    # All fields except 'beam_power_channel_name' are required.
+    # Beam power.
+    beam_power_channel_name=
     
     # Mass flow rate
-    channel_flow_rate=
+    flow_rate_channel_name=
 
     # Temperature in
-    channel_temp_in=
+    temp_in_channel_name=
 
     # Temperature out
-    channel_temp_out=
+    temp_out_channel_name=
 
     # Pressure in
-    channel_pressure_in=
+    pressure_in_channel_name=
 
     # Pressure out
-    channel_pressure_out=
+    pressure_out_channel_name=
 
 The fields should have the respective PV names (channels) that data is to be pulled from.
 
