@@ -20,7 +20,7 @@ with open("connection.conf") as config_file:
         confs[key] = value
 
 beam_power_channel = None
-if confs['beam_power_channel_name'].strip():
+if 'beam_power_channel_name' in confs and confs['beam_power_channel_name'].strip():
     print 'beam power supplied', '"' + confs['beam_power_channel_name'] + '"'
     beam_power_channel = confs['beam_power_channel_name']
     
