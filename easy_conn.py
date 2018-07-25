@@ -9,9 +9,15 @@
 # and add the resulting directory to LD_LIBRARY_PATH
 
 import cx_Oracle
+
 from datetime import datetime, timedelta
 import numpy as np
 from scipy import interpolate
+
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdate
+import matplotlib.patches as mpatches
+from matplotlib.dates import DateFormatter
 
 # ------------------ #
 #   Subroutine(s)    #
@@ -33,6 +39,7 @@ def getChannelData(channel):
         JOIN chan_arch.channel c  ON c.channel_id = s.channel_id
         WHERE c.name = :1
         AND s.smpl_time BETWEEN :2 AND :3
+        ORDER BY s.smpl_time
         """,
         ( channel_flow_rate, start, end ))
     data = []
@@ -82,17 +89,35 @@ def align(*time_value_arrays):
                            earliest_stop, 
                            max_len) 
     
-    #print datetime.fromtimestamp(new_time[0])
-    #print datetime.fromtimestamp(new_time[-1])
-
+    new_value_arrays = []
     for time_value_array in time_value_arrays:
+        time_array  = time_value_array[:, 0]
         value_array = time_value_array[:, 1]
+        print len(time_array), len(value_array)
+        new_value_arrays.append( 
+                                # Interpolate a new value array with the new x axis as the new times. 
+                                np.interp( new_time, np.asarray(time_array), np.asarray(value_array)) 
+                               )       
     
-    return time_value_arrays
+    return (new_time, tuple(new_value_arrays))
+
+def plot(oldtimes, oldvalues, newtimes, newvalues, title):
+    # Date format is "year:month:day hour:minute:second"
+    formatter = DateFormatter("%y:%m:%d %H:%M:%S")
+    fig, ax = plt.subplots()
+    ax.plot(mdate.epoch2num(np.asarray(oldtimes)), np.asarray(oldvalues), 'r-', mdate.epoch2num(newtimes), newvalues, 'b*')
+    ax.xaxis.set_major_formatter(formatter)
+    plt.title(title)
+    red_patch  = mpatches.Patch(color='red' , label='Raw Data')
+    blue_patch = mpatches.Patch(color='blue', label='Interpolated Data')
+    plt.legend(handles=[red_patch, blue_patch])
+    plt.show()
+
 
 # ---------------- #
 #   Main routine   #
 # ---------------- #
+
 
 # Read configuration file
 confs = {}
@@ -104,14 +129,14 @@ with open("connection.conf") as config_file:
         key, value = line.split('=')
         confs[key] = value
 
-# Channel ID that the mass flow rate will be pulled from.
+# Channel ID that the mass flow rate values will be pulled from.
 channel_flow_rate = confs['channel_flow_rate']
 
-# Channel IDs that the in and out temperature will be pulled from.
+# Channel IDs that the in and out temperature values will be pulled from.
 channel_temp_in  = confs['channel_temp_in']
 channel_temp_out = confs['channel_temp_out']
 
-# Channel IDs that the in and out pressure will be pulled from.
+# Channel IDs that the in and out pressure values will be pulled from.
 channel_pressure_in  = confs['channel_pressure_in']
 channel_pressure_out = confs['channel_pressure_out']
 
@@ -121,6 +146,14 @@ temp_out = getChannelData(channel_temp_out)
 pressure_in  = getChannelData(channel_pressure_in)
 pressure_out = getChannelData(channel_pressure_out)
 
-mass_flow, temp_in, temp_out, pressure_in, pressure_out = align(mass_flow, temp_in, temp_out, pressure_in, pressure_out)
+times, data = align(mass_flow, temp_in, temp_out, pressure_in, pressure_out)
+# Unpack the data tuple
+interp_mass_flow, interp_temp_in, interp_temp_out, interp_pressure_in, interp_pressure_out = data
+
+plot(   mass_flow[:, 0],    mass_flow[:, 1], times, interp_mass_flow,    "Mass Flow")
+plot(     temp_in[:, 0],      temp_in[:, 1], times, interp_temp_in,      "Temp In")
+plot(    temp_out[:, 0],     temp_out[:, 1], times, interp_temp_out,     "Temp Out")
+plot( pressure_in[:, 0],  pressure_in[:, 1], times, interp_pressure_in,  "Pressure In")
+plot(pressure_out[:, 0], pressure_out[:, 1], times, interp_pressure_out, "Pressure Out")
 
 
