@@ -20,7 +20,7 @@ class ChannelHelper:
     def __del__(self):
         self.connection.close()
         
-    def getChannelData(self, channel):
+    def getChannelData(self, channel, hours=1, start=None, end=None):
         """
         Retrieve the last hours worth of time, value pairs from the channel.
         
@@ -39,12 +39,14 @@ class ChannelHelper:
         """
         
         # Get the last hour.
-        end = datetime.now()
-        start = end - timedelta(hours=1)
+        if end is None:
+            end = datetime.now()
+        if start is None:
+            start = end - timedelta(hours=hours)
 
         cursor = self.connection.cursor()
         cursor.execute("""
-            SELECT s.smpl_time AS Time, s.float_val AS Value
+            SELECT s.smpl_time, s.float_val
             FROM chan_arch.sample s
             JOIN chan_arch.channel c  ON c.channel_id = s.channel_id
             WHERE c.name = :1
@@ -53,12 +55,12 @@ class ChannelHelper:
             """,
             ( channel, start, end ))
         data = []
+        
         for time, value in cursor:
             # Append time in seconds since epoch and sample value. 
             # Add four hours to correct for difference with UTC.
-            data.append( ( (time - datetime(1970, 1, 1) + timedelta(hours=4)).total_seconds(), value) )
+            data.append( ( (time - datetime(1970, 1, 1)).total_seconds(), value) )
         
-        # Return as numpy array
         return np.asarray(data)
 
     def align(self, *time_value_arrays):
@@ -106,9 +108,7 @@ class ChannelHelper:
         
         # Generate a new time array that the new interpolated value arrays can all align on.
         # NumPy array of times in the interval [start, stop] with max_len number of evenly spaced samples.
-        new_time = np.linspace(latest_start, 
-                               earliest_stop, 
-                               max_len) 
+        new_times = np.linspace(latest_start, earliest_stop, max_len) 
         
         new_value_arrays = []
         for time_value_array in time_value_arrays:
@@ -116,12 +116,13 @@ class ChannelHelper:
             time_array  = time_value_array[:, 0]
             value_array = time_value_array[:, 1]
             
+           
             new_value_arrays.append( 
-                                    # Interpolate a new value array with the new x axis as the new times. 
-                                    np.interp( new_time, np.asarray(time_array), np.asarray(value_array)) 
+                                    # Interpolate a new value array with the new x axis as the new times.
+                                    np.interp( new_times, time_array, value_array ) 
                                    )       
         
-        return (new_time, tuple(new_value_arrays))
+        return (new_times, tuple(new_value_arrays))
 
     def plot(self, oldtimes, oldvalues, newtimes, newvalues, title):
         """
