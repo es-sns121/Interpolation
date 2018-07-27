@@ -6,6 +6,18 @@ import sys
 from RdbHelper import RdbHelper
 import ChannelHelper as ch
 import PlotHelper as ph
+
+# ---------------- #
+#   Subroutine(s)  #
+# ---------------- #
+
+def help():
+    print 'usage: python easy_conn.py [-h] [-plot] [-print]'
+    print '\toption "-help"  : print this message'
+    print '\toption "-plot"  : plot the interpolated data against the raw data'
+    print '\toption "-print" : print the interpolated data'
+    sys.exit(0)
+
 # ---------------- #
 #   Main routine   #
 # ---------------- #
@@ -19,7 +31,10 @@ class Keys:
     temp_out     = 'temp_out_channel_name'
     pressure_in  = 'pressure_in_channel_name'
     pressure_out = 'pressure_out_channel_name'
-    
+
+if '-help' in sys.argv:
+    help()
+
 # Read configuration file
 confs = {}
 with open(Keys.config_file) as config_file:
@@ -62,7 +77,8 @@ for channel in channels:
 # interpolated_data is a tuple containing five or six arrays depending on if beam power was used.
 times, interpolated_data = channelHelper.align(*data)
 
-if '-p' not in sys.argv:
+# Print if given the command.
+if '-print' in sys.argv:
     for channel in channels:
         if channel is not None and channel.strip():
             print '{:>25}'.format(channel),
@@ -74,12 +90,11 @@ if '-p' not in sys.argv:
             else:
                 print '{:>25}'.format('-'),
         print
-else:
+
+# Plot if given the command.
+if '-plot' in sys.argv:
     for i in range(len(data)):
         if interpolated_data[i] is not None:
             ph.plot(data[i][:, 0], data[i][:, 1], times, interpolated_data[i], channels[i])
         else:
             print 'Channel {} not plotted.'.format(channels[i])
-
-
-
