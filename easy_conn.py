@@ -16,7 +16,7 @@ def help():
     print '\toption "-help"       : Print this message'
     print '\toption "-verbose"    : Print debug information.'
     print '\toption "-sample"     : The default is to average the number of samples between the finest and coarsest data.'
-    print '\t                     : Use "avg" for average, "up" to upsample, or "down" to downsample.'
+    print '\t                     : Use "avg" for average, "up" to up sample to the finest level, or "down" to down sample to the coarsest level.'
     print '\toption "-plot"       : Plot the interpolated data against the raw data.'
     print '\toption "-print"      : Print the interpolated data.'
     sys.exit(0)
