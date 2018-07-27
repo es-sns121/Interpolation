@@ -165,15 +165,4 @@ To set sampling:
 To print debug info:
 
     python easy_conn.py -verbose
-    
-### Regarding the PlotHelper module
-
-This module is mostly for debug purposes, as it allows you to compare the interpolated values to the raw data, but it also stands as a good example of
-how to plot data using matplotlib.
-
-    ChannelHelper.plot(raw_times, raw_values, times, values, title)
-
-Its primary purpose is to plot two traces of data. The first two arguments are NumPy arrays of time and values for the raw data. The third and fourth
-argument is the time and values for the aligned interpolated values. The fifth argument lets you specificy the title of the opened plot window.
-
 
