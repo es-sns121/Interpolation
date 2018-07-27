@@ -142,6 +142,10 @@ To retrieve data:
 
     python easy_conn.py
 
+For help:
+
+    python easy_conn.py -help
+
 To print retrieved data:
 
     python easy_conn.py -print
@@ -149,10 +153,18 @@ To print retrieved data:
 To plot retrieved data:
 
     python easy_conn.py -plot
-    
-For help:
 
-    python easy_conn.py -help
+To export retrieved data to excel file:
+
+    python easy_conn.py -export filename
+    
+To set sampling:
+
+    python easy_conn.py -sample [avg/up/down]
+    
+To print debug info:
+
+    python easy_conn.py -verbose
     
 ### Regarding the PlotHelper module
 
