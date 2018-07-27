@@ -25,7 +25,7 @@ def help():
 #   Main routine   #
 # ---------------- #
 
-# Provides a central location for all non externalized strings.
+# Provides a central location for all non externalized key strings.
 class Keys:
     config_file  = 'connection.conf'
     beam_power   = 'beam_power_channel_name'
