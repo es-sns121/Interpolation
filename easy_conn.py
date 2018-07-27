@@ -16,7 +16,7 @@ class Keys:
     flow_rate    = 'flow_rate_channel_name'
     temp_in      = 'temp_in_channel_name'
     temp_out     = 'temp_out_channel_name'
-    pressure_in  = 'pressure_out_channel_name'
+    pressure_in  = 'pressure_in_channel_name'
     pressure_out = 'pressure_out_channel_name'
     
 # Read configuration file
@@ -29,49 +29,44 @@ with open(Keys.config_file) as config_file:
         key, value = line.split('=')
         confs[key] = value
 
+channels = []
 beam_power_channel = None
 if Keys.beam_power in confs and confs[Keys.beam_power].strip():
     beam_power_channel = confs[Keys.beam_power]
-    
+    channels.append(beam_power_channel)
+
 # Channel ID that the mass flow rate values will be pulled from.
 flow_rate_channel = confs[Keys.flow_rate]
-
+channels.append(flow_rate_channel)
 # Channel IDs that the in and out temperature values will be pulled from.
 temp_in_channel  = confs[Keys.temp_in]
+channels.append(temp_in_channel)
 temp_out_channel = confs[Keys.temp_out]
-
+channels.append(temp_out_channel)
 # Channel IDs that the in and out pressure values will be pulled from.
 pressure_in_channel  = confs[Keys.pressure_in]
+channels.append(pressure_in_channel)
 pressure_out_channel = confs[Keys.pressure_out]
+channels.append(pressure_out_channel)
 
 # Connect to RDB
 rdbHelper = RdbHelper()
 conn = rdbHelper.getConnection()
 channelHelper = ch.ChannelHelper(conn)
 
-beam_power = None
-if beam_power_channel is not None:
-    beam_power = channelHelper.getChannelData(beam_power_channel)
+data = []
+for channel in channels:
+    data.append(channelHelper.getChannelData(channel))
 
-mass_flow    = channelHelper.getChannelData(flow_rate_channel)
-temp_in      = channelHelper.getChannelData(temp_in_channel)
-temp_out     = channelHelper.getChannelData(temp_out_channel)
-pressure_in  = channelHelper.getChannelData(pressure_in_channel)
-pressure_out = channelHelper.getChannelData(pressure_out_channel)
-
-if beam_power is None:
-    times, data = channelHelper.align(mass_flow, temp_in, temp_out, pressure_in, pressure_out)
-else:
-    times, data = channelHelper.align(beam_power, mass_flow, temp_in, temp_out, pressure_in, pressure_out)
-    
-for key in confs.keys():
-    if key is not None:
-        print '{:>25}'.format(key),
-    else:
-        print '{:>25}'.format('-'),
+# interpolated_data is a tuple containing five or six arrays depending on if beam power was used.
+times, interpolated_data = channelHelper.align(*data)
+   
+for channel in channels:
+    if channel is not None and channel.strip():
+        print '{:>25}'.format(channel),
 print
 for i in range(len(times)):
-    for array in data:
+    for array in interpolated_data:
         if array is not None:
             print '{:>25}'.format(array[i]),
         else:

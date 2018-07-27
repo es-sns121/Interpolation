@@ -20,10 +20,10 @@ class ChannelHelper:
         """
         Retrieve the last hours worth of time, value pairs from the channel.
         
-        Retrieve's the last hours worth of time, value pairs from the passed channel.
+        Retrieves the last hours worth of time, value pairs from the passed channel.
         The time value pairs are returned as a two column NumPy array where the first
         column is the time values, and the second column is the sample values.
-        The time in each row correspons to the sample in the same row.
+        The time in each row corresponds to the sample in the same row.
         
         Parameters
         ----------
@@ -61,7 +61,7 @@ class ChannelHelper:
 
     def align(self, *time_value_arrays):
         """
-        Aligns passed (time, value) array tuples on the same time scale and iterpolates the data so that each array has the same number of datapoints.
+        Aligns passed (time, value) array tuples on the same time scale and interpolates the data so that each array has the same number of data points.
         
         All arrays will be aligned on the same time scale.
         All arrays will be interpolated using linear interpolation so that they are the same magnitude.

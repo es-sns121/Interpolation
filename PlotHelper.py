@@ -1,9 +1,15 @@
+# 
+# Author(s): Evan Smith, smithej@ornl.gov
+#
 
 import platform
 import sys
 
-if platform.system == 'Windows':
+# Tkl/Tk isn't supported on windows so don't try to import matplotlib.
+if platform.system() == 'Windows':
+    print 'import PlotHelper ...'
     print 'Matplotlib relies on Tkl/Tk graphical library which is not supported on windows.'
+    print 'It is suggested you remove this import and please consider other alternatives.'
     sys.exit(0)
 
 import matplotlib.pyplot as plt
