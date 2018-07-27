@@ -2,22 +2,13 @@
 # Author(s): Evan Smith, smithej@ornl.gov
 #
 
-import platform
-import sys
-
-# Tkl/Tk isn't supported on windows so don't try to import matplotlib.
-if platform.system() == 'Windows':
-    print 'import PlotHelper ...'
-    print 'Matplotlib relies on Tkl/Tk graphical library which is not supported on windows.'
-    print 'It is suggested you remove this import and please consider other alternatives.'
-    sys.exit(0)
-
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdate
 import matplotlib.patches as mpatches
 from matplotlib.dates import DateFormatter
 
-def plot(self, oldtimes, oldvalues, newtimes, newvalues, title):
+def plot(oldtimes, oldvalues, newtimes, newvalues, title):
         """
         Plot a comparison of raw values and times versus interpolated values and times.
         
