@@ -32,6 +32,14 @@ Download the Oracle instant client binary from
 On Linux, unpack the instantclient-basic-linux.x64-12.2.0.1.0.zip
 and add the resulting directory to LD_LIBRARY_PATH
 
+Install Pandas
+
+    python -m pip install -U pandas
+    
+Install OpenPxl
+
+    python -m pip install -U openpyxl
+
 ## Windows
 
 ### Install Python 2
@@ -80,6 +88,14 @@ Download the Oracle instant client binary from
 
 On Windows, unzip the instantclient-basic-Windows.x64-12.2.0.1.0.zip
 and add the resulting directory to your Path enviornment variable.
+
+Install Pandas
+
+    python -m pip install -U pandas
+    
+Install OpenPxl
+
+    python -m pip install -U openpyxl
 
 ## Install other python RDB client
 
