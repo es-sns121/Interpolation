@@ -2,9 +2,10 @@
 # Author(s): Evan Smith, smithej@ornl.gov
 #
 
+import sys
 from RdbHelper import RdbHelper
 import ChannelHelper as ch
-
+import PlotHelper as ph
 # ---------------- #
 #   Main routine   #
 # ---------------- #
@@ -60,18 +61,25 @@ for channel in channels:
 
 # interpolated_data is a tuple containing five or six arrays depending on if beam power was used.
 times, interpolated_data = channelHelper.align(*data)
-   
-for channel in channels:
-    if channel is not None and channel.strip():
-        print '{:>25}'.format(channel),
-print
-for i in range(len(times)):
-    for array in interpolated_data:
-        if array is not None:
-            print '{:>25}'.format(array[i]),
-        else:
-            print '{:>25}'.format('-'),
+
+if '-p' not in sys.argv:
+    for channel in channels:
+        if channel is not None and channel.strip():
+            print '{:>25}'.format(channel),
     print
+    for i in range(len(times)):
+        for array in interpolated_data:
+            if array is not None:
+                print '{:>25}'.format(array[i]),
+            else:
+                print '{:>25}'.format('-'),
+        print
+else:
+    for i in range(len(data)):
+        if interpolated_data[i] is not None:
+            ph.plot(data[i][:, 0], data[i][:, 1], times, interpolated_data[i], channels[i])
+        else:
+            print 'Channel {} not plotted.'.format(channels[i])
 
 
 
