@@ -2,24 +2,35 @@
 # Author(s): Evan Smith, smithej@ornl.gov
 #
 
+from time import strftime, gmtime
 import sys
 from RdbHelper import RdbHelper
 import ChannelHelper as ch
 import PlotHelper as ph
+import ExportHelper as ex
 
 # ---------------- #
 #   Subroutine(s)  #
 # ---------------- #
 
 def help():
-    print 'usage: python easy_conn.py [-h] [-sample (up/down/avg)][-plot] [-print]'
+    print 'usage: python easy_conn.py [-h] [-sample (up/down/avg)] [-export (filename)] [-plot] [-print]'
     print '\toption "-help"       : Print this message'
     print '\toption "-verbose"    : Print debug information.'
     print '\toption "-sample"     : The default is to average the number of samples between the finest and coarsest data.'
     print '\t                     : Use "avg" for average, "up" to up sample to the finest level, or "down" to down sample to the coarsest level.'
+    print '\toption "-export"     : Exports the data to an excel file.'
     print '\toption "-plot"       : Plot the interpolated data against the raw data.'
     print '\toption "-print"      : Print the interpolated data.'
     sys.exit(0)
+
+# Convert an array of seconds since epoch to string timestamps.
+def convertTimes(times):
+    formattedTimes = []
+    for time in times:
+        formattedTime = strftime('%Y-%m-%d %H:%M:%S', gmtime(time))
+        formattedTimes.append(formattedTime)
+    return formattedTimes
 
 # ---------------- #
 #   Main routine   #
@@ -125,3 +136,19 @@ if '-plot' in sys.argv:
             ph.plot(data[i][:, 0], data[i][:, 1], times, interpolated_data[i], channels[i])
         else:
             print 'Channel {} not plotted.'.format(channels[i])
+            
+# Export if given the command.
+if '-export' in sys.argv:
+    index = sys.argv.index('-export')
+    filename = sys.argv[index + 1]
+    print 'Exporting to file ', filename
+    headers = ['Time']
+    for channel in channels:
+        headers.append(channel)
+    converted_times = convertTimes(times)
+    columns = [converted_times]
+    for array in interpolated_data:
+        columns.append(array)
+    exporter = ex.Exporter(filename)
+    exporter.export(headers, columns)
+    
