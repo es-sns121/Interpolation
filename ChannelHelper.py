@@ -84,6 +84,9 @@ class ChannelHelper:
         earliest_stop = timedelta.max.total_seconds()
         
         for time_value_array in time_value_arrays:
+            if len(time_value_array) == 0 or len(time_value_array[0]) == 0:
+                continue
+            
             length = len(time_value_array)
             
             # Find the max length of the passed arrays to find out the maximum number of samples.
@@ -109,10 +112,14 @@ class ChannelHelper:
         new_value_arrays = []
         for time_value_array in time_value_arrays:
             
+            if len(time_value_array) == 0 or len(time_value_array[0]) == 0:
+                new_value_arrays.append(None)
+                continue
+            
             time_array  = time_value_array[:, 0]
             value_array = time_value_array[:, 1]
             
-           
+            
             new_value_arrays.append( 
                                     # Interpolate a new value array with the new x axis as the new times.
                                     np.interp( new_times, time_array, value_array ) 

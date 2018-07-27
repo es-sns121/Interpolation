@@ -64,17 +64,19 @@ if beam_power is None:
 else:
     times, data = channelHelper.align(beam_power, mass_flow, temp_in, temp_out, pressure_in, pressure_out)
     
-interp_beam_power = None
-
-# Unpack the data tuple
-if beam_power is None:
-    interp_mass_flow, interp_temp_in, interp_temp_out, interp_pressure_in, interp_pressure_out = data
-else:
-    interp_beam_power, interp_mass_flow, interp_temp_in, interp_temp_out, interp_pressure_in, interp_pressure_out = data
-
-print "{:>20} {:>20} {:>20} {:>20} {:>20}".format(flow_rate_channel, temp_in_channel, temp_out_channel, pressure_in_channel, pressure_out_channel)
-for i in range(len(interp_mass_flow)):
-    print "{:>20} {:>20} {:>20} {:>20} {:>20}".format(interp_mass_flow[i], interp_temp_in[i], interp_temp_out[i], interp_pressure_in[i], interp_pressure_out[i])
+for key in confs.keys():
+    if key is not None:
+        print '{:>25}'.format(key),
+    else:
+        print '{:>25}'.format('-'),
+print
+for i in range(len(times)):
+    for array in data:
+        if array is not None:
+            print '{:>25}'.format(array[i]),
+        else:
+            print '{:>25}'.format('-'),
+    print
 
 
 
