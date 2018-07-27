@@ -5,49 +5,81 @@ The data is then aligned chonologically and interpolated so that each channel th
 data is pulled from has the same amount of data points. Data is only interpolated
 over channel overlaps.
 
-## Install Oracle python client.
+## Linux
 
-### Linux
-Install Oracle client by any of these, depending on python version:
-    
-    easy_install cx_Oracle
-    pip install cx_Oracle
+### Install Pip
+
+Install pip. [Here.](https://pip.pypa.io/en/stable/installing/)
+
+### Install needed Python Modules.
+
+Install SciPy
+
+    python -m pip install -U scipy
+
+Install MatplotLib
+
+    python -m pip install -U matplotlib
+
+Install the oracle python client.
+
     python -m pip install cx_Oracle
 
 Download the Oracle instant client binary from
 
     http://www.oracle.com/technetwork/database/database-technologies/instant-client/downloads/index.html
 
-On Linux, unpack the instantclient-basiclite-linux.x64-12.2.0.1.0.zip
+On Linux, unpack the instantclient-basic-linux.x64-12.2.0.1.0.zip
 and add the resulting directory to LD_LIBRARY_PATH
 
-### Windows
+## Windows
 
-#### You have python but not pip.
+### Install Python 2
 
-Download pip, the python package manager.
+Install the latest stable version of [Python 2](https://www.python.org/downloads/windows/)
 
-    https://bootstrap.pypa.io/get-pip.py
+Run the installer with admin privileges.
 
-#### You don't have python.
+You need to add the Python executable and 'Scripts' directory to your Path enviornment variable.
 
-Download python.
+The default install location for Python on Windows is
 
-    https://www.python.org/downloads/release/python-2715/
+    C:\Python27
 
-Now download pip.
+Add this to your path variable.
 
-#### With python and pip.
-Install the Oracle client with pip.
+The Scipts directory in the Python install location should also be added.
+
+    C:\Python27\Scripts
     
-    pip install cx_Oracle
+Add this to your path variable.
 
+### Install Pip
 
-Download the Oracle client binary from 
+Install Pip. [Here.](https://pip.pypa.io/en/stable/installing/)
+
+The easiest way on windows is to run the get-pip.py script available at the above link.
+
+### Install needed Python Modules.
+
+Install SciPy
+
+    python -m pip install -U scipy
+
+Install MatplotLib
+
+    python -m pip install -U matplotlib
+
+Install the oracle python client.
+
+    python -m pip install -U cx_Oracle
+
+Download the Oracle instant client binary from
 
     http://www.oracle.com/technetwork/database/database-technologies/instant-client/downloads/index.html
 
-On windows, upack the instantclient-basic-windows.x64-12.2.0.1.0.zip in the directory where you will be running your python code from.
+On Windows, unzip the instantclient-basic-Windows.x64-12.2.0.1.0.zip
+and add the resulting directory to your Path enviornment variable.
 
 ## Install other python RDB client
 
@@ -90,11 +122,25 @@ The fields should have the respective PV names (channels) that data is to be pul
 
 ### Running the script
     
-    python easy_conn.py
-    
-#### Regarding the ChannelHelper.plot method
+To retrieve data:
 
-This method is mostly for debug purposes, as it allows you to compare the interpolated values to the raw data, but it also stands as a good example of
+    python easy_conn.py
+
+To print retrieved data:
+
+    python easy_conn.py -print
+    
+To plot retrieved data:
+
+    python easy_conn.py -plot
+    
+For help:
+
+    python easy_conn.py -help
+    
+### Regarding the PlotHelper module
+
+This module is mostly for debug purposes, as it allows you to compare the interpolated values to the raw data, but it also stands as a good example of
 how to plot data using matplotlib.
 
     ChannelHelper.plot(raw_times, raw_values, times, values, title)
