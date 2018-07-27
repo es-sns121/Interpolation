@@ -12,10 +12,13 @@ import PlotHelper as ph
 # ---------------- #
 
 def help():
-    print 'usage: python easy_conn.py [-h] [-plot] [-print]'
-    print '\toption "-help"  : print this message'
-    print '\toption "-plot"  : plot the interpolated data against the raw data'
-    print '\toption "-print" : print the interpolated data'
+    print 'usage: python easy_conn.py [-h] [-sample (up/down/avg)][-plot] [-print]'
+    print '\toption "-help"       : Print this message'
+    print '\toption "-verbose"    : Print debug information.'
+    print '\toption "-sample"     : The default is to average the number of samples between the finest and coarsest data.'
+    print '\t                     : Use "avg" for average, "up" to upsample, or "down" to downsample.'
+    print '\toption "-plot"       : Plot the interpolated data against the raw data.'
+    print '\toption "-print"      : Print the interpolated data.'
     sys.exit(0)
 
 # ---------------- #
@@ -34,6 +37,11 @@ class Keys:
 
 if '-help' in sys.argv:
     help()
+
+verbose = False
+if '-verbose' in sys.argv:
+    verbose = True
+    print 'Verbose set. Printing debug info.'
 
 # Read configuration file
 confs = {}
@@ -65,14 +73,33 @@ channels.append(pressure_in_channel)
 pressure_out_channel = confs[Keys.pressure_out]
 channels.append(pressure_out_channel)
 
+if verbose:
+    print 'Read channel names as: ', channels
+
 # Connect to RDB
 rdbHelper = RdbHelper()
 conn = rdbHelper.getConnection()
-channelHelper = ch.ChannelHelper(conn)
+if verbose:
+    print 'Server version: ', conn.version
+
+sample = 'avg'
+if '-sample' in sys.argv:
+    index = sys.argv.index('-sample')
+    sample = sys.argv[index + 1]
+    if sample not in ('avg', 'up', 'down'):
+        print 'Sample value must be either "avg", "up", or "down"'
+        sys.exit(0)
+
+if verbose:
+    print 'Sample : ', sample
+
+channelHelper = ch.ChannelHelper(conn, sample, verbose)
 
 data = []
 for channel in channels:
     data.append(channelHelper.getChannelData(channel))
+    if verbose:
+        print len(data[-1]), ' samples found for channel ', channel
 
 # interpolated_data is a tuple containing five or six arrays depending on if beam power was used.
 times, interpolated_data = channelHelper.align(*data)

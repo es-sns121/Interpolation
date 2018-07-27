@@ -3,16 +3,18 @@
 #
 
 import cx_Oracle
-
+import sys
 from datetime import datetime, timedelta
 import numpy as np
 from scipy import interpolate
 
 
 class ChannelHelper:
-    def __init__(self, connection):
+    def __init__(self, connection, sample='avg', verbose=False):
         self.connection = connection
-    
+        self.sample = sample
+        self.verbose = verbose
+        
     def __del__(self):
         self.connection.close()
         
@@ -79,7 +81,15 @@ class ChannelHelper:
             - data is a tuple containing all of the interpolated data arrays.
         """
         
-        max_len = 0
+        # Initialize the sample_len.
+        if self.sample in ('avg', 'up'):
+            sample_len = 0
+        else:
+            sample_len = sys.maxint
+        
+        # If average, collect all lengths to calculate a mean.
+        sample_lengths = []
+        
         latest_start  = timedelta.min.total_seconds()
         earliest_stop = timedelta.max.total_seconds()
         
@@ -89,10 +99,16 @@ class ChannelHelper:
             
             length = len(time_value_array)
             
-            # Find the max length of the passed arrays to find out the maximum number of samples.
-            if (length > max_len):
-                max_len = length
-              
+            if self.sample == 'up':
+                # Find the max length of the passed arrays to find out the maximum number of samples.
+                if (length > sample_len):
+                    sample_len = length
+            elif self.sample == 'down':
+                if (length < sample_len):
+                    sample_len = length
+            elif self.sample == 'avg':
+                sample_lengths.append(length)
+            
             # We need to find the area where all of the arrays overlap in time.
             time_array  = time_value_array[:, 0]
             
@@ -103,11 +119,16 @@ class ChannelHelper:
                 latest_start = cur_start
             if cur_stop < earliest_stop:  # Find the earliest stop time in all of the passed arrays.
                 earliest_stop = cur_stop
-
+                
+        if self.sample == 'avg':
+            sample_len = int(np.mean(sample_lengths))
         
+        if self.verbose:
+            print 'Number of samples in interpolated data: ', sample_len
+                      
         # Generate a new time array that the new interpolated value arrays can all align on.
         # NumPy array of times in the interval [start, stop] with max_len number of evenly spaced samples.
-        new_times = np.linspace(latest_start, earliest_stop, max_len) 
+        new_times = np.linspace(latest_start, earliest_stop, sample_len) 
         
         new_value_arrays = []
         for time_value_array in time_value_arrays:
