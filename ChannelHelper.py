@@ -121,7 +121,7 @@ class ChannelHelper:
                 earliest_stop = cur_stop
                 
         if self.sample == 'avg':
-            sample_len = int(np.mean(sample_lengths))
+            sample_len = sum(sample_lengths) / len(sample_lengths)
         
         if self.verbose:
             print 'Number of samples in interpolated data: ', sample_len
