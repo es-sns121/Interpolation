@@ -72,14 +72,9 @@ if beam_power is None:
 else:
     interp_beam_power, interp_mass_flow, interp_temp_in, interp_temp_out, interp_pressure_in, interp_pressure_out = data
 
-# Plot to verify. For debug purposes. This is just the easiest way to verify that the interpolated data looks right.
-if interp_beam_power is not None:
-   channelHelper.plot(beam_power[:, 0],   beam_power[:, 1], times, interp_beam_power,   "Beam Power") 
-channelHelper.plot(    mass_flow[:, 0],    mass_flow[:, 1], times, interp_mass_flow,    "Mass Flow")
-channelHelper.plot(      temp_in[:, 0],      temp_in[:, 1], times, interp_temp_in,      "Temp In")
-channelHelper.plot(     temp_out[:, 0],     temp_out[:, 1], times, interp_temp_out,     "Temp Out")
-channelHelper.plot(  pressure_in[:, 0],  pressure_in[:, 1], times, interp_pressure_in,  "Pressure In")
-channelHelper.plot( pressure_out[:, 0], pressure_out[:, 1], times, interp_pressure_out, "Pressure Out")
+print "{:>20} {:>20} {:>20} {:>20} {:>20}".format(flow_rate_channel, temp_in_channel, temp_out_channel, pressure_in_channel, pressure_out_channel)
+for i in range(len(interp_mass_flow)):
+    print "{:>20} {:>20} {:>20} {:>20} {:>20}".format(interp_mass_flow[i], interp_temp_in[i], interp_temp_out[i], interp_pressure_in[i], interp_pressure_out[i])
 
 
 
