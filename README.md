@@ -142,17 +142,17 @@ The fields should have the respective PV names (channels) that data is to be pul
 
 To retrieve data:
 
-    python easy_conn.py
+    python Connection.py start_date end_date
 
 For help:
 
-    python easy_conn.py -help
+    python Connection.py -help
 
 To set sampling:
 
-    python easy_conn.py -sample [avg/up/down]
+    python Connection.py -sample [avg/up/down]
     
 To print debug info:
 
-    python easy_conn.py -verbose
+    python Connection.py -verbose
 
