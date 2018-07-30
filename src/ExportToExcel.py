@@ -13,7 +13,7 @@ class Exporter:
         Export a headers array and columns array to an excel file.
         
         The headers will constitute the first row of the file.
-        The columns will constitute every row
+        The columns will constitute the contents of every column below the first row.
         
         Parameters
         ----------
@@ -37,5 +37,5 @@ class Exporter:
         # Create a DataFrame from the passed arrays.
         dataFrame = pd.DataFrame(data)
         
-        dataFrame.to_excel(self.filename, 'Interpolated Data', index=False)
+        dataFrame.to_excel(self.filename, 'Data', index=False)
         

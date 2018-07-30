@@ -148,18 +148,6 @@ For help:
 
     python easy_conn.py -help
 
-To print retrieved data:
-
-    python easy_conn.py -print
-    
-To plot retrieved data:
-
-    python easy_conn.py -plot
-
-To export retrieved data to excel file:
-
-    python easy_conn.py -export filename
-    
 To set sampling:
 
     python easy_conn.py -sample [avg/up/down]
