@@ -98,7 +98,6 @@ class ChannelHelper:
         new_value_arrays = []
         for time_value_array in time_value_arrays:
             if time_value_array is None or len(time_value_array) == 0 or len(time_value_array[0]) == 0:
-                new_value_arrays.append(None)
                 continue
             
             length = len(time_value_array)
