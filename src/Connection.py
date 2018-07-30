@@ -124,3 +124,7 @@ for table_file in table_files:
 
 # 'data' now contains a map of data arrays keyed on their respective channel names.
 # 'interpolationFunctions' now contains a list of 2D interpolation functions. Their order is the same as in the tables.conf file.
+
+# EXAMPLE
+# heEnthalpyFunction = interpolationFunctions[0]
+# he_enthalpy_value = heEnthalpyFunction(he_pressure_value, he_temperature_value)
