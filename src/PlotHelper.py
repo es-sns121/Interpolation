@@ -8,7 +8,7 @@ import matplotlib.dates as mdate
 import matplotlib.patches as mpatches
 from matplotlib.dates import DateFormatter
 
-def plot(oldtimes, oldvalues, newtimes, newvalues, title):
+def plotRawVersusInterpolated(oldtimes, oldvalues, newtimes, newvalues, title):
         """
         Plot a comparison of raw values and times versus interpolated values and times.
         
@@ -28,7 +28,6 @@ def plot(oldtimes, oldvalues, newtimes, newvalues, title):
         fig, ax = plt.subplots()
         ax.plot(mdate.epoch2num(np.asarray(oldtimes)), np.asarray(oldvalues), 'r-', mdate.epoch2num(newtimes), newvalues, 'b*')
         ax.xaxis.set_major_formatter(formatter)
-        
         plt.title(title)
         fig.canvas.set_window_title(title)
 
@@ -37,4 +36,17 @@ def plot(oldtimes, oldvalues, newtimes, newvalues, title):
         blue_patch = mpatches.Patch(color='blue', label='Interpolated Data')
         plt.legend(handles=[red_patch, blue_patch])
         
+        plt.show()
+
+def plotTraceWithTimeAsX(x_values, y_values, title, ylabel, trace='r-'):
+        # Date format is "year:month:day hour:minute:second"
+        formatter = DateFormatter("%m/%d/%Y")
+        fig, ax = plt.subplots()
+        plt.plot(mdate.epoch2num(np.asarray(x_values)), np.asarray(y_values), trace)
+        ax.xaxis.set_major_formatter(formatter)
+        ax.set_ylabel(ylabel)
+        ax.set_xlabel("Time")
+        
+        plt.title(title)
+        fig.canvas.set_window_title(title)
         plt.show()

@@ -55,6 +55,8 @@ class ChannelHelper:
         data = []
         
         for time, value in cursor:
+            if (value is None):
+                value = 0.0
             # Append time in seconds since epoch and sample value. 
             # Add four hours to correct for difference with UTC.
             data.append( ( (time - datetime(1970, 1, 1)).total_seconds(), value) )
@@ -134,18 +136,17 @@ class ChannelHelper:
         
         for time_value_array in time_value_arrays:
             
-            if len(time_value_array) == 0 or len(time_value_array[0]) == 0:
+            if time_value_array is None or len(time_value_array) == 0 or len(time_value_array[0]) == 0:
                 new_value_arrays.append(None)
                 continue
             
             time_array  = time_value_array[:, 0]
             value_array = time_value_array[:, 1]
-            
-            
+
             new_value_arrays.append( 
                                     # Interpolate a new value array with the new x axis as the new times.
                                     np.interp( new_times, time_array, value_array ) 
-                                   )       
+                                   )
         
         data = [new_times]
         

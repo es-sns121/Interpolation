@@ -137,7 +137,9 @@ The program only needs a single file to read input from...
 The fields should have the respective PV names (channels) that data is to be pulled from.
 
 ### Running the script
-    
+
+    cd Interpolation/src
+
 To retrieve data:
 
     python easy_conn.py
